@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.member.mapper.MberSttusChangeHistMapper">
+    <insert id="insertMberSttusChangeHist" parameterType="com.gallery.api.member.entity.MberSttusChangeHistEntity">
+        INSERT INTO MBER_STTUS_CHANGE_HIST
+        (
+            MBER_NO,
+            BEGIN_DT,
+            END_DT,
+            MBER_STTUS_CODE,
+            MBER_CHANGE_RESN_CODE,
+            RESN_DETAIL,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        )
+        VALUES
+        (
+            #{mberNo},
+            CURRENT_TIMESTAMP,
+            #{endDt},
+            #{mberSttusCode},
+            #{mberChangeResnCode},
+            #{resnDetail},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.member.mapper.MberNtcnSetupMapper">
+  <insert id="insertMberNtcnSetup" parameterType="com.gallery.api.member.entity.MberNtcnSetupEntity">
+    insert into mber_ntcn_setup
+    (
+        mber_no,
+        all_recptn_at,
+        aplctn_recptn_at,
+        email_recptn_at,
+        sms_recptn_at,
+        ntcn_time_lmtt_at,
+        ntcn_begin_time,
+        ntcn_end_time,
+        creat_mber_no,
+        creat_dt,
+        change_mber_no,
+        change_dt
+    )
+    values
+    (
+        #{mberNo},
+        #{allRecptnAt},
+        #{aplctnRecptnAt},
+        #{emailRecptnAt},
+        #{smsRecptnAt},
+        #{ntcnTimeLmttAt},
+        #{ntcnBeginTime},
+        #{ntcnEndTime},
+        #{creatMberNo},
+        CURRENT_TIMESTAMP,
+        #{changeMberNo},
+        CURRENT_TIMESTAMP
+    )
+  </insert>
+
+  <select id="selectMberNtcnSetupByMberNo" parameterType="string" resultType="com.gallery.api.member.entity.MberNtcnSetupEntity">
+    select mber_no
+        , all_recptn_at
+        , aplctn_recptn_at
+        , email_recptn_at
+        , sms_recptn_at
+        , ntcn_time_lmtt_at
+        , ntcn_begin_time
+        , ntcn_end_time
+        , creat_mber_no
+        , creat_dt
+        , change_mber_no
+        , change_dt
+      from mber_ntcn_setup
+    where mber_no = #{mberNo}
+  </select>
+
+  <update id="updateMberNtcnSetupByMberNo" parameterType="com.gallery.api.member.entity.MberNtcnSetupEntity">
+    update mber_ntcn_setup
+       set all_recptn_at = coalesce(nullif(#{allRecptnAt}, ''), all_recptn_at)
+         , aplctn_recptn_at = coalesce(nullif(#{aplctnRecptnAt}, ''), aplctn_recptn_at)
+         , email_recptn_at = coalesce(nullif(#{emailRecptnAt}, ''), email_recptn_at)
+         , sms_recptn_at = coalesce(nullif(#{smsRecptnAt}, ''), sms_recptn_at)
+         , ntcn_time_lmtt_at = coalesce(nullif(#{ntcnTimeLmttAt}, ''), ntcn_time_lmtt_at)
+         , ntcn_begin_time = coalesce(nullif(#{ntcnBeginTime}, ''), ntcn_begin_time)
+         , ntcn_end_time = coalesce(nullif(#{ntcnEndTime}, ''), ntcn_end_time)
+         , change_mber_no = #{changeMberNo}
+         , change_dt = CURRENT_TIMESTAMP
+     where mber_no = #{mberNo}
+  </update>
+</mapper>

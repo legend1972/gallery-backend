@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.codes.mapper.CmmnGroupCdMapper">
+    <select id="selectAllCmmnGroupCd" resultType="com.gallery.api.codes.entity.CmmnGroupCdEntity">
+        select group_code
+             , group_nm
+             , column_id
+             , rm
+             , use_at
+             , creat_mber_no
+             , creat_dt
+             , change_mber_no
+             , change_dt
+          from cmmn_group_cd
+         where use_at = 'Y'
+    </select>
+</mapper>

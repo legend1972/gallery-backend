@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.role.mapper.MenuMapper">
+    <select id="selectLstMenuByMNoAndRCode" resultType="com.gallery.api.role.entity.MenuEntity">
+        <![CDATA[
+           select d.menu_id
+                , d.menu_ordr
+                , d.parnts_menu_id
+                , d.menu_nm
+                , d.menu_url
+                , d.upend_use_at
+                , d.lpt_use_at
+                , d.use_at
+                , d.creat_mber_no
+                , d.creat_dt
+                , d.change_mber_no
+                , d.change_dt
+                , d.lpt_menu_at
+                , d.lpt_menu_sn
+                , d.lpt_icon
+            from mber_role a
+                , role_info b
+                , role_menu_author c
+                , menu d
+            where a.mber_no = #{mberNo}
+            and a.end_dt >= current_timestamp
+            and a.role_id = b.role_id
+            and b.bass_role_code = #{bassRoleCode}
+            and b.use_at = 'Y'
+            and b.role_id = c.role_id
+            and c.use_at = 'Y'
+            and c.menu_id = d.menu_id
+            and d.use_at = 'Y'
+        ]]>
+    </select>
+</mapper>

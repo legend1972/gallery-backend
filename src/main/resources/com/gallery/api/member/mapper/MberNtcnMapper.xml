@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.member.mapper.MberNtcnMapper">
+    <insert id="insertMberNtcn" parameterType="com.gallery.api.member.entity.MberNtcnEntity">
+        insert into mber_ntcn
+        (
+            mber_ntcn_no,
+            mber_no,
+            ntcn_ty_code,
+            sj,
+            cn,
+            trget_ty_code,
+            trget_no,
+            redng_at,
+            redng_dt,
+            ntcn_end_dt,
+            use_at,
+            regist_dt,
+            creat_mber_no,
+            creat_dt,
+            change_mber_no,
+            change_dt
+        )
+        values
+        (
+            'NTN' || lpad(nextval('mber_ntcn_no')::text, 9, '0'),
+            #{mberNo},
+            #{ntcnTyCode},
+            #{sj},
+            #{cn},
+            #{trgetTyCode},
+            #{trgetNo},
+            #{redngAt},
+            #{redngDt},
+            #{ntcnEndDt},
+            #{useAt},
+            CURRENT_TIMESTAMP,
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectCntMberNtcnByMberNo" parameterType="string" resultType="int">
+        select count(*)
+          from mber_ntcn
+         where mber_no = #{mberNo}
+           and redng_at = #{redngAt}
+           and use_at = 'Y'
+           and ntcn_end_dt >= CURRENT_TIMESTAMP
+    </select>
+
+    <select id="selectListMberNtcnByMberNo" resultType="com.gallery.api.member.dto.MberNtcnBindingDto">
+        with result as (
+        select a.mber_ntcn_no
+            , a.mber_no
+            , a.sj
+            , a.cn
+            , a.ntcn_ty_code
+            , a.trget_ty_code
+            , a.trget_no
+            , a.redng_at
+            , b.menu_url
+            , c.ntcn_ctgry_code
+            , c.icon_code
+            , a.creat_dt
+            , a.regist_dt
+        from mber_ntcn a
+            , ntcn_ty b
+            , ntcn_setup_iem c
+        where a.mber_no = #{mberNo}
+        and a.use_at = 'Y'
+        <![CDATA[
+        and a.ntcn_end_dt >= CURRENT_TIMESTAMP
+        ]]>
+        and a.ntcn_ty_code = b.ntcn_ty_code
+        and b.ntcn_setup_code = c.ntcn_setup_code
+        ), cnt as (
+        select count(*) all_cnt
+            , count(*) filter (where redng_at = 'N') noread
+            , count(*) filter (where redng_at = 'Y' and ntcn_ctgry_code = 'ARTWORK') artwork
+            , count(*) filter (where redng_at = 'Y' and ntcn_ctgry_code = 'EXHIBITION') exhibition
+            , count(*) filter (where redng_at = 'Y' and ntcn_ctgry_code = 'INQUIRY') inquiry
+            , count(*) filter (where redng_at = 'Y' and ntcn_ctgry_code = 'ETC') etc
+        from result
+        ), list as (
+        select *
+        from result
+        <choose>
+            <when test="ntcnCtgryCode != null and ntcnCtgryCode != '' and ntcnCtgryCode == 'NOREAD'">
+                where redng_at = 'N'
+            </when>
+
+            <when test="ntcnCtgryCode != null and ntcnCtgryCode != ''">
+                where ntcn_ctgry_code = #{ntcnCtgryCode}
+                and redng_at = 'Y'
+            </when>
+        </choose>
+        )
+        select mber_ntcn_no
+            , mber_no
+            , sj
+            , cn
+            , ntcn_ty_code
+            , trget_ty_code
+            , trget_no
+            , redng_at
+            , menu_url
+            , ntcn_ctgry_code
+            , icon_code
+            , regist_dt
+            , all_cnt
+            , noread
+            , artwork
+            , exhibition
+            , inquiry
+            , etc
+        from cnt a
+        left join list l
+                on true
+        order by creat_dt desc
+        limit #{size}
+        offset #{offset}
+    </select>
+
+    <update id="updateMberNtcnByMberNtcnNo" parameterType="string">
+        update mber_ntcn
+           set redng_at = #{redngAt}
+             , redng_dt = current_timestamp
+             , change_mber_no = #{changeMberNo}
+             , change_dt = current_timestamp
+        where mber_ntcn_no = #{mberNtcnNo}
+    </update>
+</mapper>

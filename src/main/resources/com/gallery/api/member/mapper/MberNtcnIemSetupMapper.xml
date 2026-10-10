@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.member.mapper.MberNtcnIemSetupMapper">
+    <insert id="insertMberNtcnIemSetupList">
+        insert into mber_ntcn_iem_setup
+        select #{mberNtcnIemSetup.mberNo}
+             , ntcn_setup_code
+             , #{mberNtcnIemSetup.aplctnRecptnAt}
+             , #{mberNtcnIemSetup.emailRecptnAt}
+             , #{mberNtcnIemSetup.smsRecptnAt}
+             , #{mberNtcnIemSetup.creatMberNo}
+             , current_timestamp
+             , #{mberNtcnIemSetup.changeMberNo}
+             , current_timestamp
+          from ntcn_setup_iem_role
+         where role_id = #{roleId}
+           and use_at = 'Y'
+    </insert>
+
+    <select id="selectMberNtcnIemSetupByMberNo" parameterType="string" resultType="com.gallery.api.member.entity.MberNtcnIemSetupEntity">
+      select mber_no
+          , ntcn_setup_code
+          , aplctn_recptn_at
+          , email_recptn_at
+          , sms_recptn_at
+          , creat_mber_no
+          , creat_dt
+          , change_mber_no
+          , change_dt
+        from mber_ntcn_iem_setup
+      where mber_no = #{mberNo}
+    </select>
+
+    <select id="selectListMberNtcnIemSetupByMberNoAndRoldId" parameterType="string" resultType="com.gallery.api.member.dto.MberNtcnIemSetupBindingDto">
+      select c.mber_no
+          , a.ntcn_setup_code
+          , a.ntcn_setup_nm
+          , a.ntcn_setup_cn
+          , a.ntcn_ctgry_code
+          , a.icon_code
+          , c.aplctn_recptn_at
+          , c.email_recptn_at
+          , c.sms_recptn_at
+        from ntcn_setup_iem a
+        join ntcn_setup_iem_role b
+          on a.use_at = 'Y'
+        and a.ntcn_setup_code = b.ntcn_setup_code
+        and b.use_at = 'Y'
+        and b.role_id = #{roleId}
+      left join mber_ntcn_iem_setup c
+          on b.ntcn_setup_code = c.ntcn_setup_code
+        and c.mber_no = #{mberNo}
+      order by a.sn asc
+    </select>
+
+    <update id="updateMberNtcnIemSetupByMberNoAndNtcnSetupCode" parameterType="com.gallery.api.member.entity.MberNtcnIemSetupEntity">
+      update mber_ntcn_iem_setup
+        set aplctn_recptn_at = coalesce(nullif(#{aplctnRecptnAt}, ''), aplctn_recptn_at)
+          , email_recptn_at = coalesce(nullif(#{emailRecptnAt}, ''), email_recptn_at)
+          , sms_recptn_at = coalesce(nullif(#{smsRecptnAt}, ''), sms_recptn_at)
+          , change_mber_no = #{changeMberNo}
+          , change_dt = current_timestamp
+      where mber_no = #{mberNo}
+        and ntcn_setup_code = #{ntcnSetupCode}
+    </update>
+
+    <insert id="insertMberNtcnIemSetup" parameterType="com.gallery.api.member.entity.MberNtcnIemSetupEntity">
+      insert into mber_ntcn_iem_setup
+      ( mber_no
+      , ntcn_setup_code
+      , aplctn_recptn_at
+      , email_recptn_at
+      , sms_recptn_at
+      , creat_mber_no
+      , creat_dt
+      , change_mber_no
+      , change_dt)
+      select #{mberNo}
+	          , #{ntcnSetupCode}
+	          , coalesce(nullif(#{aplctnRecptnAt}, ''), dflt_aplctn_recptn_at)
+	          , coalesce(nullif(#{emailRecptnAt}, ''), dflt_email_recptn_at)
+	          , coalesce(nullif(#{smsRecptnAt}, ''), dflt_sms_recptn_at)
+	          , #{creatMberNo}
+	          , current_timestamp
+	          , #{changeMberNo}
+	          , current_timestamp
+		     from ntcn_setup_iem
+	      where ntcn_setup_code = #{ntcnSetupCode}
+    </insert>
+</mapper>

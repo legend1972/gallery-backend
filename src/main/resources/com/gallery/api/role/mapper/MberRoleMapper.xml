@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.role.mapper.MberRoleMapper">
+    <insert id="insertMberRole" parameterType="com.gallery.api.role.entity.MberRoleEntity">
+        INSERT INTO MBER_ROLE
+        (
+            MBER_NO,
+            ROLE_ID,
+            ALWNC_DT,
+            ALWNC_MBER_NO,
+            END_DT,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        )
+        VALUES
+        (
+            #{mberNo},
+            #{roleId},
+            CURRENT_TIMESTAMP,
+            #{alwncMberNo},
+            #{endDt},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateMberRoleByMberNoAndRoleId" parameterType="com.gallery.api.role.entity.MberRoleEntity">
+        UPDATE MBER_ROLE
+           SET END_DT = CURRENT_TIMESTAMP
+             , CHANGE_MBER_NO = #{changeMberNo}
+             , CHANGE_DT = CURRENT_TIMESTAMP
+         WHERE MBER_NO = #{mberNo}
+           AND ROLE_ID = #{roleId}
+    </update>
+
+    <select id="selectMberRoleByMberNo" parameterType="string" resultType="com.gallery.api.role.entity.MberRoleEntity">
+        <![CDATA[
+           SELECT MBER_NO
+                , ROLE_ID
+                , ALWNC_DT
+                , ALWNC_MBER_NO
+                , END_DT
+                , CREAT_MBER_NO
+                , CREAT_DT
+                , CHANGE_MBER_NO
+                , CHANGE_DT
+            FROM MBER_ROLE
+           WHERE MBER_NO = #{mberNo}
+             AND END_DT >= CURRENT_TIMESTAMP
+         ]]>
+    </select>
+
+</mapper>

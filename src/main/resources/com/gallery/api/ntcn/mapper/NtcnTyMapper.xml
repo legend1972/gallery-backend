@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.ntcn.mapper.NtcnTyMapper">
+  <select id="selectNtcnTyByNtcnTyCode" parameterType="string" resultType="com.gallery.api.ntcn.entity.NtcnTyEntity">
+        select ntcn_ty_code
+             , ntcn_setup_code
+             , ntcn_ty_nm
+             , event_ty_code
+             , sttus_code
+             , recptn_trget_ty_code
+             , sj_tmpl
+             , cn_tmpl
+             , trget_ty_code
+             , aplctn_recptn_use_at
+             , email_recptn_use_at
+             , sms_recptn_use_at
+             , ntcn_pd
+             , use_at
+             , creat_mber_no
+             , creat_dt
+             , change_mber_no
+             , change_dt
+          from ntcn_ty
+         where ntcn_ty_code = #{ntcnTyCode}
+           and ntcn_setup_codE = #{ntcnSetupCode}
+           and use_at = 'Y'
+  </select>
+</mapper>

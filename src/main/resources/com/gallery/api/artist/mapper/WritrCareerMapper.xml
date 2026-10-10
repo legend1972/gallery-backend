@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.artist.mapper.WritrCareerMapper">
+    <insert id="insertListWritrCareer" parameterType="com.gallery.api.artist.dto.WritrCareerBindingDto">
+        <selectKey keyProperty="careerNo"
+                   resultType="string"
+                   order="BEFORE">
+            select 'CRN' || lpad(nextval('CAREER_NO')::text, 9, '0')
+        </selectKey>
+        INSERT INTO WRITR_CAREER
+        (
+            CAREER_NO,
+            SN,
+            MBER_NO,
+            CAREER_YEAR,
+            CAREER_CN,
+            CAREER_SE_CODE,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        )
+        VALUES
+        <foreach collection="careerList" item="item" separator=",">
+        (
+            #{careerNo},
+            #{item.sn},
+            #{item.mberNo},
+            #{item.careerYear},
+            #{item.careerCn},
+            #{item.careerSeCode},
+            #{item.creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{item.changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+        </foreach>
+    </insert>
+
+    <select id="selectListWritrCareerByMberNo" parameterType="string" resultType="com.gallery.api.artist.entity.WritrCareerEntity">
+        select career_no
+            , sn
+            , mber_no
+            , career_year
+            , career_cn
+            , career_se_code
+            , creat_mber_no
+            , creat_dt
+            , change_mber_no
+            , change_dt
+        from writr_career
+        where mber_no = #{mberNo}
+    </select>
+
+    <delete id="deleteWritrCareerByMberNo" parameterType="string">
+        delete from writr_career
+         where mber_no = #{mberNo}
+    </delete>
+</mapper>

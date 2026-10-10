@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.artist.mapper.WritrUrlMapper">
+    <insert id="insertListWritrUrl" parameterType="com.gallery.api.artist.dto.WritrUrlBindingDto">
+        <selectKey
+            keyProperty="urlNo"
+            resultType="string"
+            order="BEFORE">
+            select 'URN' || lpad(nextval('URL_NO')::text, 9, '0')
+        </selectKey>
+
+        INSERT INTO WRITR_URL
+        (
+            URL_NO,
+            SN,
+            MBER_NO,
+            URL,
+            SITE_CODE,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        )
+        VALUES
+        <foreach collection="urlList" item="item" separator=",">
+        (
+            #{urlNo},
+            #{item.sn},
+            #{item.mberNo},
+            #{item.url},
+            #{item.siteCode},
+            #{item.creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{item.changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+        </foreach>
+    </insert>
+
+    <select id="selectListWritrUrlByMberNo" parameterType="string" resultType="com.gallery.api.artist.entity.WritrUrlEntity">
+        select url_no
+            , sn
+            , mber_no
+            , url
+            , site_code
+            , creat_mber_no
+            , creat_dt
+            , change_mber_no
+            , change_dt
+        from writr_url
+        where mber_no = #{mberNo}
+    </select>
+
+    <delete id="deleteWritrUrlByMberNo" parameterType="string">
+        delete from writr_url
+         where mber_no = #{mberNo}
+    </delete>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.role.mapper.RoleInfoMapper">
+    <select id="selectRoleInfoByBassRoleCode" parameterType="string" resultType="com.gallery.api.role.entity.RoleInfoEntity">
+        select role_id
+            , bass_role_code
+            , role_nm
+            , use_at
+            , creat_mber_no
+            , creat_dt
+            , change_mber_no
+            , change_dt
+        from role_info
+        where bass_role_code = #{bassRoleCode}
+        and use_at = 'Y'
+    </select>
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.member.mapper.MberInfoMapper">
+    <select id="selectMberInfoByEmail" parameterType="com.gallery.api.member.entity.MberInfoEntity" resultType="com.gallery.api.member.entity.MberInfoEntity">
+       select mber_no
+            , ncnm
+            , email
+            , secret_no
+            , stplat_agre_at
+            , indvdlinfo_colct_agre_at
+            , markt_colct_agre_at
+            , email_colct_agre_at
+            , sms_colct_agre_at
+            , sbscrb_dt
+            , last_conect_dt
+            , mber_sttus_code
+            , sttus_change_dt
+            , mber_sbscrb_ty_code
+            , creat_mber_no
+            , creat_dt
+            , change_mber_no
+            , change_dt
+         from mber_info
+        where email = #{email}
+    </select>
+
+    <insert id="insertMberInfo" parameterType="com.gallery.api.member.entity.MberInfoEntity">
+        <selectKey keyProperty="mberNo"
+                   resultType="String"
+                   order="BEFORE">
+            select 'MBN' || lpad(nextval('mber_no')::text, 9, '0')
+        </selectKey>
+
+        INSERT INTO mber_info (
+              mber_no
+            , ncnm
+            , email
+            , secret_no
+            , stplat_agre_at
+            , indvdlinfo_colct_agre_at
+            , markt_colct_agre_at
+            , email_colct_agre_at
+            , sms_colct_agre_at
+            , sbscrb_dt
+            , last_conect_dt
+            , mber_sttus_code
+            , sttus_change_dt
+            , mber_sbscrb_ty_code
+            , creat_mber_no
+            , creat_dt
+            , change_mber_no
+            , change_dt
+        )
+        VALUES (
+              #{mberNo}
+            , #{ncnm}
+            , #{email}
+            , #{secretNo}
+            , #{stplatAgreAt}
+            , #{indvdlinfoColctAgreAt}
+            , #{marktColctAgreAt}
+            , #{emailColctAgreAt}
+            , #{smsColctAgreAt}
+            , CURRENT_TIMESTAMP
+            , NULL
+            , #{mberSttusCode}
+            , CURRENT_TIMESTAMP
+            , #{mberSbscrbTyCode}
+            , #{creatMberNo}
+            , CURRENT_TIMESTAMP
+            , #{changeMberNo}
+            , CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateMberInfoByMberNo" parameterType="string">
+        update mber_info
+           set last_conect_dt = CURRENT_TIMESTAMP
+             , change_mber_no = #{changeMberNo}
+             , change_dt = CURRENT_TIMESTAMP
+         where mber_no = #{mberNo}
+    </update>
+
+    <update id="updataMberInfoSbscrbTyByMberNo" parameterType="string">
+        update mber_info
+           set mber_sbscrb_ty_code = #{mberSbscrbTyCode}
+             , change_mber_no = #{changeMberNo}
+             , change_dt = CURRENT_TIMESTAMP
+         where mber_no = #{mberNo}
+    </update>
+
+    <select id="selectMberInfoByMberNo" parameterType="com.gallery.api.member.entity.MberInfoEntity" resultType="com.gallery.api.member.entity.MberInfoEntity">
+       select mber_no
+            , ncnm
+            , email
+            , secret_no
+            , stplat_agre_at
+            , indvdlinfo_colct_agre_at
+            , markt_colct_agre_at
+            , email_colct_agre_at
+            , sms_colct_agre_at
+            , sbscrb_dt
+            , last_conect_dt
+            , mber_sttus_code
+            , sttus_change_dt
+            , mber_sbscrb_ty_code
+            , creat_mber_no
+            , creat_dt
+            , change_mber_no
+            , change_dt
+         from mber_info
+        where mber_no = #{mberNo}
+    </select>
+</mapper>

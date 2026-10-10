@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.artist.mapper.WritrJdgmnChangeHistMapper">
+    <insert id="insertWritrJdgmnChangeHist" parameterType="com.gallery.api.artist.entity.WritrJdgmnChangeHistEntity">
+        insert into writr_jdgmn_change_hist
+        (
+            mber_no,
+            begin_dt,
+            end_dt,
+            jdgmn_sttus_code,
+            creat_mber_no,
+            creat_dt,
+            change_mber_no,
+            change_dt
+        )
+        values
+        (
+            #{mberNo},
+            CURRENT_TIMESTAMP,
+            #{endDt},
+            #{jdgmnSttusCode},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateWritrJdgmnChangeHist" parameterType="com.gallery.api.artist.entity.WritrJdgmnChangeHistEntity">
+        update writr_jdgmn_change_hist
+           set end_dt = CURRENT_TIMESTAMP
+             , change_mber_no = #{changeMberNo}
+             , change_dt = CURRENT_TIMESTAMP
+         where mber_no = #{mberNo}
+           and jdgmn_sttus_code = #{jdgmnSttusCode}
+    </update>
+
+</mapper>

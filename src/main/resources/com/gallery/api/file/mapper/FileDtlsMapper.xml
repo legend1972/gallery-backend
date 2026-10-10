@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.file.mapper.FileDtlsMapper">
+    <insert id="insertListFileDtls" parameterType="com.gallery.api.file.dto.FileDtlsBindingDto">
+        <selectKey
+            keyProperty="fileNo"
+            resultType="string"
+            order="BEFORE">
+            select 'FIL' || lpad(nextval('FILE_NO')::text, 9, '0')
+        </selectKey>
+        insert into file_dtls
+        (
+            file_no,
+            sn,
+            mber_no,
+            file_lc,
+            orginl_file_nm,
+            stre_file_nm,
+            file_extsn,
+            cntnts_ty_code,
+            image_ty_code,
+            dc,
+            use_at,
+            creat_mber_no,
+            creat_dt,
+            change_mber_no,
+            change_dt
+        )
+        values
+        <foreach collection="fileDtlsList" item="item" separator=",">
+        (
+            #{fileNo},
+            #{item.sn},
+            #{item.mberNo},
+            #{item.fileLc},
+            #{item.orginlFileNm},
+            #{item.streFileNm},
+            #{item.fileExtsn},
+            #{item.cntntsTyCode},
+            #{item.imageTyCode},
+            #{item.dc},
+            #{item.useAt},
+            #{item.creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{item.changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+        </foreach>
+    </insert>
+
+    <select id="selectListFileDtlsByFileNo" parameterType="string" resultType="com.gallery.api.file.entity.FileDtlsEntity">
+        select file_no,
+                sn,
+                mber_no,
+                file_lc,
+                orginl_file_nm,
+                stre_file_nm,
+                file_extsn,
+                cntnts_ty_code,
+                image_ty_code,
+                dc,
+                use_at,
+                creat_mber_no,
+                creat_dt,
+                change_mber_no,
+                change_dt
+        from file_dtls
+        where file_no = #{fileNo}
+    </select>
+
+    <select id="selectFileDtlsByFileNoAndSn" resultType="com.gallery.api.file.entity.FileDtlsEntity">
+        select file_no,
+                sn,
+                mber_no,
+                file_lc,
+                orginl_file_nm,
+                stre_file_nm,
+                file_extsn,
+                cntnts_ty_code,
+                image_ty_code,
+                dc,
+                use_at,
+                creat_mber_no,
+                creat_dt,
+                change_mber_no,
+                change_dt
+        from file_dtls
+       where file_no = #{fileNo}
+         and sn = #{sn}
+    </select>
+</mapper>
