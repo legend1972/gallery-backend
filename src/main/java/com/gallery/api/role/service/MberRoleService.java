@@ -1,7 +1,10 @@
 package com.gallery.api.role.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.gallery.api.role.dto.MberRoleBindingDto;
 import com.gallery.api.role.dto.in.MberRoleInDto;
 import com.gallery.api.role.dto.out.MberRoleOutDto;
 import com.gallery.api.role.entity.MberRoleEntity;
@@ -75,4 +78,19 @@ public class MberRoleService {
                     .changeDt(mberRoleEntity.getChangeDt())
                 .build();
     }
+
+    /**
+     * 전체 메뉴 조회
+     * @param roleId
+     * @param mberNo
+     * @return
+     */
+    public List<MberRoleBindingDto> getListAllMenuByMberNoAndRole(String roleId, String mberNo, String nm) {
+        List<MberRoleBindingDto> mberRoleBindingDtoList = mberRoleMapper.selectListAllMenuByMberNoAndRole(roleId, mberNo, nm);
+        if(mberRoleBindingDtoList.size() == 0) {
+            throw new CustomException(ErrorCode.MENU_ERROR);
+        }
+        return mberRoleBindingDtoList;
+    }
+
 }

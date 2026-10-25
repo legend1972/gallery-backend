@@ -240,18 +240,37 @@ public class MberInfoController {
      */
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<MberInfoMeBindingOutDto>> getLoginMember(HttpSession session) {
+        logger.debug("사용자 세션 정보 조회");
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto) session.getAttribute("loginMember");
         if(mberInfoOutDto == null) {
-            throw new CustomException(ErrorCode.SESSION_ERROR);
+            // throw new CustomException(ErrorCode.SESSION_ERROR);
+            logger.debug("mberInfoOutDto 값이 null 입니다.");
+            return ResponseEntity.ok(ApiResponse.success(null));
         }
 
         String mberNo = "";
         MberRoleOutDto mberRoleOutDto;
+
+        /******************************
+         * 회원번호로 작가 정보가 있는지 확인
+         ******************************/
         WritrInfoOutDto writrInfoOutDto = writrInfoService.getWritrInfoByGnrlMberNo(mberInfoOutDto.getMberNo());
+        /**
+         * 심사 상태가 승인이 난 견우와 아닌 경우
+         */
         if(writrInfoOutDto != null && ObjectUtils.nullSafeEquals(StcCommVari.JDGMN_STTUS_CMPL, writrInfoOutDto.getJdgmnSttusCode())) {
             mberNo = writrInfoOutDto.getMberNo();
+            /******************************
+             * 회원번호 조건으로 회원역할 조회
+             ******************************/
             mberRoleOutDto = mberRoleService.getMberRoleByMberNo(mberNo);
         } else {
+            /******************************
+             * 회원번호 조건으로 회원역할 조회
+             ******************************/
             mberRoleOutDto = mberRoleService.getMberRoleByMberNo(mberInfoOutDto.getMberNo());
         }
 

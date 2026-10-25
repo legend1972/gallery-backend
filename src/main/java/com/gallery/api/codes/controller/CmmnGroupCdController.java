@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/codes")
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class CmmnGroupCdController {
     private final CmmnGroupCdService cmmnGroupCdService;
 

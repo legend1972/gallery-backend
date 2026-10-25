@@ -14,7 +14,8 @@ import org.springframework.cache.annotation.EnableCaching;
 	"com.gallery.api.role.mapper",
 	"com.gallery.api.file.mapper",
 	"com.gallery.api.ntcn.mapper",
-	"com.gallery.api.jdgmn.mapper"
+	"com.gallery.api.jdgmn.mapper",
+	"com.gallery.api.prdct.mapper"
 })
 public class BackendApplication {
 

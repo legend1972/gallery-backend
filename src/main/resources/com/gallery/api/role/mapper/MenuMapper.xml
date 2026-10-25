@@ -6,7 +6,7 @@
 <mapper namespace="com.gallery.api.role.mapper.MenuMapper">
     <select id="selectLstMenuByMNoAndRCode" resultType="com.gallery.api.role.entity.MenuEntity">
         <![CDATA[
-           select d.menu_id
+        select d.menu_id
                 , d.menu_ordr
                 , d.parnts_menu_id
                 , d.menu_nm
@@ -20,14 +20,47 @@
                 , d.change_dt
                 , d.lpt_menu_at
                 , d.lpt_menu_sn
-                , d.lpt_icon
+                , d.lpt_icon_nm
+                , d.icon_nm
+                , d.icon_color
+                , d.login_need_at
             from mber_role a
                 , role_info b
                 , role_menu_author c
                 , menu d
-            where a.mber_no = #{mberNo}
-            and a.end_dt >= current_timestamp
+            where 'R0006' != #{roleId}
+            and a.mber_no = #{mberNo}
+            and a.end_dt = to_timestamp('99991231235959', 'yyyymmddhh24miss')
             and a.role_id = b.role_id
+            and b.bass_role_code = #{bassRoleCode}
+            and b.use_at = 'Y'
+            and b.role_id = c.role_id
+            and c.use_at = 'Y'
+            and c.menu_id = d.menu_id
+            and d.use_at = 'Y'
+            union
+        select d.menu_id
+                , d.menu_ordr
+                , d.parnts_menu_id
+                , d.menu_nm
+                , d.menu_url
+                , d.upend_use_at
+                , d.lpt_use_at
+                , d.use_at
+                , d.creat_mber_no
+                , d.creat_dt
+                , d.change_mber_no
+                , d.change_dt
+                , d.lpt_menu_at
+                , d.lpt_menu_sn
+                , d.lpt_icon_nm
+                , d.icon_nm
+                , d.icon_color
+                , d.login_need_at
+            from role_info b
+                , role_menu_author c
+                , menu d
+            where 'R0006' = #{roleId}
             and b.bass_role_code = #{bassRoleCode}
             and b.use_at = 'Y'
             and b.role_id = c.role_id

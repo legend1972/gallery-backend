@@ -9,5 +9,5 @@ import com.gallery.api.role.entity.MenuEntity;
 
 @Mapper
 public interface MenuMapper {
-    List<MenuEntity> selectLstMenuByMNoAndRCode(@Param("mberNo") String mberNo, @Param("bassRoleCode") String bassRoleCode);
+    List<MenuEntity> selectLstMenuByMNoAndRCode(@Param("roleId") String roleId, @Param("mberNo") String mberNo, @Param("bassRoleCode") String bassRoleCode);
 }

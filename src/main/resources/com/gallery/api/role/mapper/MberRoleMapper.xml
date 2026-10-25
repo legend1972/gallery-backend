@@ -41,8 +41,7 @@
     </update>
 
     <select id="selectMberRoleByMberNo" parameterType="string" resultType="com.gallery.api.role.entity.MberRoleEntity">
-        <![CDATA[
-           SELECT MBER_NO
+        SELECT MBER_NO
                 , ROLE_ID
                 , ALWNC_DT
                 , ALWNC_MBER_NO
@@ -52,9 +51,84 @@
                 , CHANGE_MBER_NO
                 , CHANGE_DT
             FROM MBER_ROLE
-           WHERE MBER_NO = #{mberNo}
-             AND END_DT >= CURRENT_TIMESTAMP
-         ]]>
+        WHERE MBER_NO = #{mberNo}
+        AND end_dt = to_timestamp('99991231235959', 'yyyymmddhh24miss')
     </select>
 
+    <select id="selectListAllMenuByMberNoAndRole" parameterType="string" resultType="com.gallery.api.role.dto.MberRoleBindingDto">
+        select group_id
+            , group_nm
+            , group_dc
+            , menu_id
+            , menu_nm
+            , menu_dc
+            , menu_url
+            , icon_nm
+            , icon_color
+            , inqire_posbl_at
+            , regist_posbl_at
+            , change_posbl_at
+            , delete_posbl_at
+        from (select c.group_id
+                    , c.group_nm
+                    , c.group_dc
+                    , c.sn
+                    , b.menu_id
+                    , b.menu_ordr
+                    , b.menu_nm
+                    , b.menu_dc
+                    , b.menu_url
+                    , b.icon_nm
+                    , b.icon_color
+                    , a.inqire_posbl_at
+                    , a.regist_posbl_at
+                    , a.change_posbl_at
+                    , a.delete_posbl_at
+                from role_menu_author a
+                    , menu b
+                    , menu_group c
+                where 'R0006' = #{roleId}
+                and a.role_id = #{roleId}
+                and a.use_at = 'Y'
+                and a.menu_id = b.menu_id
+                and b.use_at = 'Y'
+                <if test="nm != null and nm != ''">
+                    and (b.menu_nm like '%' || #{nm} || '%' or b.menu_dc like '%' || #{nm} || '%')
+                </if>
+                and b.group_id = c.group_id
+                and c.use_at = 'Y'
+                union
+                select d.group_id
+                    , d.group_nm
+                    , d.group_dc
+                    , d.sn
+                    , c.menu_id
+                    , c.menu_ordr
+                    , c.menu_nm
+                    , c.menu_dc
+                    , c.menu_url
+                    , c.icon_nm
+                    , c.icon_color
+                    , b.inqire_posbl_at
+                    , b.regist_posbl_at
+                    , b.change_posbl_at
+                    , b.delete_posbl_at
+                from mber_role a
+                    , role_menu_author b
+                    , menu c
+                    , menu_group d
+                where 'R0006' != #{roleId}
+                and a.end_dt = to_timestamp('99991231235959', 'yyyymmddhh24miss')
+                and a.mber_no = #{mberNo}
+                and a.role_id = b.role_id
+                and b.use_at = 'Y'
+                and b.menu_id = c.menu_id
+                and c.use_at = 'Y'
+                <if test="nm != null and nm != ''">
+                    and (c.menu_nm like '%' || #{nm} || '%' or c.menu_dc like '%' || #{nm} || '%')
+                </if>
+                and c.group_id = d.group_id
+                and d.use_at = 'Y')
+        order by sn asc, menu_ordr asc
+    </select>
 </mapper>

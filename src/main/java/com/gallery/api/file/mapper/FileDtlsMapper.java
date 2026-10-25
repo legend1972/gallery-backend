@@ -15,4 +15,8 @@ public interface FileDtlsMapper {
     List<FileDtlsEntity> selectListFileDtlsByFileNo(@Param("fileNo") String fileNo);
 
     FileDtlsEntity selectFileDtlsByFileNoAndSn(@Param("fileNo") String fileNo, @Param("sn") Integer sn);
+
+    int insertListNextFileDtls(FileDtlsBindingDto fileDtlsBindingDto);
+
+    int updateFileDtlsByMberNo(@Param("changeMberNo") String changeMberNo, @Param("mberNo") String mberNo);
 }

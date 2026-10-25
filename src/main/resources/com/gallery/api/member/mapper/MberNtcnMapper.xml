@@ -66,7 +66,7 @@
             , a.redng_at
             , b.menu_url
             , c.ntcn_ctgry_code
-            , c.icon_code
+            , c.icon_nm
             , a.creat_dt
             , a.regist_dt
         from mber_ntcn a
@@ -111,7 +111,7 @@
             , redng_at
             , menu_url
             , ntcn_ctgry_code
-            , icon_code
+            , icon_nm
             , regist_dt
             , all_cnt
             , noread

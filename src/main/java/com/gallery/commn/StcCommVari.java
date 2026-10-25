@@ -23,6 +23,7 @@ public class StcCommVari {
     public static final String MBER_SBSCRB_TY_OPER = "OPER"; //운영담당자
     public static final String MBER_SBSCRB_TY_ADMN = "ADMN"; //일반관리자
     public static final String MBER_SBSCRB_TY_SUAD = "SUAD"; //슈퍼권한자
+    public static final String MBER_SBSCRB_TY_GUST = "GUST"; //비회원
 
     /**
      * 심사상태
@@ -67,4 +68,14 @@ public class StcCommVari {
     public static final String MNGR_MBER_NO = "MNG000000001"; //매니저회원번호
 
     public static final String GROUP_CD_IMAGE_EXT = "IMAGE_EXT"; //이미지 확장자
+
+    /**
+     * 역할아이디
+     */
+    public static final String ROLE_ID_R0001 = "R0001";
+    public static final String ROLE_ID_R0002 = "R0002";
+    public static final String ROLE_ID_R0003 = "R0003";
+    public static final String ROLE_ID_R0004 = "R0004";
+    public static final String ROLE_ID_R0005 = "R0005";
+    public static final String ROLE_ID_R0006 = "R0006";
 }

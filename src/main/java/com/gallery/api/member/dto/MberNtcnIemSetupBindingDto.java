@@ -15,7 +15,7 @@ public class MberNtcnIemSetupBindingDto {
     private String ntcnSetupNm;
     private String ntcnSetupCn;
     private String ntcnCtgryCode;
-    private String iconCode;
+    private String iconNm;
     private String aplctnRecptnAt;
     private String emailRecptnAt;
     private String smsRecptnAt;

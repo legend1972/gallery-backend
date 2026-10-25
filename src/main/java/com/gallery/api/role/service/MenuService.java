@@ -22,10 +22,10 @@ public class MenuService {
      * @param bassRoleCode
      * @return
      */
-    public List<MenuOutDto> getLstMenuByMNoAndRCode(String mberNo, String bassRoleCode) {
+    public List<MenuOutDto> getLstMenuByMNoAndRCode(String roleId, String mberNo, String bassRoleCode) {
         List<MenuOutDto> menuOutDtoLst = new ArrayList<>();
         
-        List<MenuEntity> menuEntityLst = menuMapper.selectLstMenuByMNoAndRCode(mberNo, bassRoleCode);
+        List<MenuEntity> menuEntityLst = menuMapper.selectLstMenuByMNoAndRCode(roleId, mberNo, bassRoleCode);
         for(MenuEntity menuEntity : menuEntityLst) {
             menuOutDtoLst.add(MenuOutDto
                 .builder()
@@ -38,7 +38,10 @@ public class MenuService {
                     .lptUseAt(menuEntity.getLptUseAt())
                     .lptMenuAt(menuEntity.getLptMenuAt())
                     .lptMenuSn(menuEntity.getLptMenuSn())
-                    .lptIcon(menuEntity.getLptIcon())
+                    .lptIconNm(menuEntity.getLptIconNm())
+                    .iconNm(menuEntity.getIconNm())
+                    .iconColor(menuEntity.getIconColor())
+                    .loginNeedAt(menuEntity.getLoginNeedAt())
                     .useAt(menuEntity.getUseAt())
                     .creatMberNo(menuEntity.getCreatMberNo())
                     .creatDt(menuEntity.getCreatDt())

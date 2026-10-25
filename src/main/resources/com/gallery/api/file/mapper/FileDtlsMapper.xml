@@ -51,6 +51,47 @@
         </foreach>
     </insert>
 
+    <insert id="insertListNextFileDtls" parameterType="com.gallery.api.file.dto.FileDtlsBindingDto">
+        insert into file_dtls
+        (
+            file_no,
+            sn,
+            mber_no,
+            file_lc,
+            orginl_file_nm,
+            stre_file_nm,
+            file_extsn,
+            cntnts_ty_code,
+            image_ty_code,
+            dc,
+            use_at,
+            creat_mber_no,
+            creat_dt,
+            change_mber_no,
+            change_dt
+        )
+        values
+        <foreach collection="fileDtlsList" item="item" separator=",">
+        (
+            #{fileNo},
+            #{item.sn},
+            #{item.mberNo},
+            #{item.fileLc},
+            #{item.orginlFileNm},
+            #{item.streFileNm},
+            #{item.fileExtsn},
+            #{item.cntntsTyCode},
+            #{item.imageTyCode},
+            #{item.dc},
+            #{item.useAt},
+            #{item.creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{item.changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+        </foreach>
+    </insert>
+
     <select id="selectListFileDtlsByFileNo" parameterType="string" resultType="com.gallery.api.file.entity.FileDtlsEntity">
         select file_no,
                 sn,
@@ -88,7 +129,17 @@
                 change_mber_no,
                 change_dt
         from file_dtls
-       where file_no = #{fileNo}
-         and sn = #{sn}
+        where file_no = #{fileNo}
+        and sn = #{sn}
+    </select>
+
+    <select id="updateFileDtlsByMberNo" parameterType="string">
+        update file_dtls
+            set use_at = 'N'
+            , change_mber_no = #{changeMberNo}
+            , change_dt = CURRENT_TIMESTAMP
+        where mber_no = #{mberNo}
+        and image_ty_code is not null
+        and use_at = 'Y'
     </select>
 </mapper>

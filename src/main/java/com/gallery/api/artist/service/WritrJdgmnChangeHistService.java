@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import com.gallery.api.artist.dto.in.WritrJdgmnChangeHistInDto;
 import com.gallery.api.artist.entity.WritrJdgmnChangeHistEntity;
 import com.gallery.api.artist.mapper.WritrJdgmnChangeHistMapper;
-import com.gallery.commn.ErrorCode;
-import com.gallery.commn.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 

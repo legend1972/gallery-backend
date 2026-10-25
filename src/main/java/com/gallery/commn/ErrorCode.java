@@ -12,6 +12,7 @@ public enum ErrorCode {
     WRITR_JDGMN_STTUS_NO(HttpStatus.NOT_FOUND, "알수 없는 심사 상태 코드입니다. 확인하세요."),
     WRITR_JDGMN_CHANGE_NOT_FOUND(HttpStatus.NOT_FOUND, "작가심사변경이력 정보가 없습니다. 확인하세요."),
     JDGMN_CECK_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "심사체크상세 정보가 없습니다. 확인하세요."),
+    JDGMN_ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "심사 권한이 없습니다. 확인하세요."),
     WRITR_STTUS_CHANGE_NOT_FOUND(HttpStatus.NOT_FOUND, "작가상태변경이력 정보가 없습니다. 확인하세요."),
     MEMBER_WRITR_NO_CONFLICT(HttpStatus.CONFLICT, "작가의 일반회원번호와 로그인한 회원번호가 일치하지 않습니다."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "요청 본문에 값이 비어서 왔습니다. 확인하세요."),

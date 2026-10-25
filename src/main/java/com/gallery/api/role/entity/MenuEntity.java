@@ -21,7 +21,10 @@ public class MenuEntity {
     private String lptUseAt;
     private String lptMenuAt;
     private Integer lptMenuSn; 
-    private String lptIcon;
+    private String lptIconNm;
+    private String iconNm;
+    private String iconColor;
+    private String loginNeedAt;
     private String useAt;
     private String creatMberNo;
     private LocalDateTime creatDt;

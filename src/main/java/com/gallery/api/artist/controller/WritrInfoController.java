@@ -137,7 +137,14 @@ public class WritrInfoController {
         List<WritrCareerInDto> writrCareerInDtoList = writrInfoBindingDto.getWritrCareerInDtoList();
         List<WritrUrlInDto> writrUrlInDtoList = writrInfoBindingDto.getWritrUrlInDtoList();
 
+        /******************************
+         * 1. 세션 정보 취득
+         * 2. 회원번호 및 가입유형코드 조회
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto)session.getAttribute("loginMember");
+        if(mberInfoOutDto == null) {
+            throw new CustomException(ErrorCode.SESSION_ERROR);
+        }
         String gnrlMberNo = mberInfoOutDto.getMberNo();
 
         /******************************
@@ -150,8 +157,8 @@ public class WritrInfoController {
         }
 
         writrInfoInDto.setGnrlMberNo(gnrlMberNo);
-        writrInfoInDto.setCreatMberNo(StcCommVari.MNGR_MBER_NO);
-        writrInfoInDto.setChangeMberNo(StcCommVari.MNGR_MBER_NO);
+        writrInfoInDto.setCreatMberNo(gnrlMberNo);
+        writrInfoInDto.setChangeMberNo(gnrlMberNo);
         writrInfoInDto.setJdgmnSttusCode(StcCommVari.JDGMN_STTUS_PEND);
         writrInfoInDto.setMberSttusCode(StcCommVari.MBER_STTUS_ACTV);
 
@@ -170,8 +177,8 @@ public class WritrInfoController {
                 .writrSttusCode(StcCommVari.WRITR_STTUS_ACTV)
                 .writrChangeResnCode(null)
                 .resnDetail(null)
-                .creatMberNo(StcCommVari.MNGR_MBER_NO)
-                .changeMberNo(StcCommVari.MNGR_MBER_NO)
+                .creatMberNo(gnrlMberNo)
+                .changeMberNo(gnrlMberNo)
             .build());
 
         /******************************
@@ -182,8 +189,8 @@ public class WritrInfoController {
                 .mberNo(mberNo)
                 .endDt(LocalDateTime.of(9999, 12, 31, 23, 59, 59))
                 .jdgmnSttusCode(StcCommVari.JDGMN_STTUS_PEND)
-                .creatMberNo(StcCommVari.MNGR_MBER_NO)
-                .changeMberNo(StcCommVari.MNGR_MBER_NO)
+                .creatMberNo(gnrlMberNo)
+                .changeMberNo(gnrlMberNo)
             .build()
         );
             
@@ -192,8 +199,8 @@ public class WritrInfoController {
         ******************************/
         writrUrlInDtoList.stream().forEach((dto) -> {
             dto.setMberNo(mberNo);
-            dto.setChangeMberNo(StcCommVari.MNGR_MBER_NO);
-            dto.setCreatMberNo(StcCommVari.MNGR_MBER_NO);
+            dto.setChangeMberNo(gnrlMberNo);
+            dto.setCreatMberNo(gnrlMberNo);
         });
 
         writrUrlService.creatListWritrUrl(writrUrlInDtoList);
@@ -203,8 +210,8 @@ public class WritrInfoController {
         ******************************/
         writrCareerInDtoList.stream().forEach((dto) -> {
             dto.setMberNo(mberNo);
-            dto.setCreatMberNo(StcCommVari.MNGR_MBER_NO);
-            dto.setChangeMberNo(StcCommVari.MNGR_MBER_NO);
+            dto.setCreatMberNo(gnrlMberNo);
+            dto.setChangeMberNo(gnrlMberNo);
         });
 
         writrCareerService.createWritrCarrer(writrCareerInDtoList);
@@ -213,7 +220,7 @@ public class WritrInfoController {
          * 대표 작품 파일 확장자 및 컨텐트 유형 검증, 업로드할 위치 설정 및 위치 생성, 파일 업로드 처리
          ******************************/
         List<FileDtlsInDto> reprsntDtoList = new ArrayList<>();
-        FileDtlsInDto reprsntDto = fileDtlsService.getFileDtls(reprsntPrdctFile, mberNo, FileUploadType.ARTWORK.name(), 1);
+        FileDtlsInDto reprsntDto = fileDtlsService.getFileDtls(reprsntPrdctFile, mberNo, FileUploadType.ARTWORK.name(), 1, null, null);
         reprsntDtoList.add(reprsntDto);
         String reprsntPrdctFileNo = fileDtlsService.createListFileDtls(reprsntDtoList);
 
@@ -221,7 +228,7 @@ public class WritrInfoController {
          * 작가 프로필 파일 확장자 및 컨텐트 유형 검증, 업로드할 위치 설정 및 위치 생성, 파일 업로드 처리
          ******************************/
         List<FileDtlsInDto> writrDtoList = new ArrayList<>();
-        FileDtlsInDto writrDto = fileDtlsService.getFileDtls(writrFile, mberNo, FileUploadType.ARTIST_PROFILE.name(), 1);
+        FileDtlsInDto writrDto = fileDtlsService.getFileDtls(writrFile, mberNo, FileUploadType.ARTIST_PROFILE.name(), 1, null, null);
         writrDtoList.add(writrDto);
         String writrFileNo = fileDtlsService.createListFileDtls(writrDtoList);
 
@@ -233,7 +240,7 @@ public class WritrInfoController {
                 .mberNo(mberNo)
                 .writrFileNo(writrFileNo)
                 .reprsntPrdctFileNo(reprsntPrdctFileNo)
-                .changeMberNo(StcCommVari.MNGR_MBER_NO)
+                .changeMberNo(gnrlMberNo)
             .build());
 
         /**
@@ -272,7 +279,13 @@ public class WritrInfoController {
      */
     @GetMapping("/get")
     public ResponseEntity<ApiResponse<WritrInfoBindingOutDto>> getWritrInfoByGnrlMberNo(HttpSession session) {
-        MberInfoOutDto mberInfoOutDto = (MberInfoOutDto) session.getAttribute("loginMember");
+        /******************************
+         * 세션 정보 취득
+         ******************************/
+        MberInfoOutDto mberInfoOutDto = (MberInfoOutDto)session.getAttribute("loginMember");
+        if(mberInfoOutDto == null) {
+            throw new CustomException(ErrorCode.SESSION_ERROR);
+        }
         String mberNo = mberInfoOutDto.getMberNo();
         
         /******************************
@@ -359,7 +372,13 @@ public class WritrInfoController {
         List<WritrUrlInDto> writrUrlInDtoList = writrInfoBindingDto.getWritrUrlInDtoList();
         String mberNo = writrInfoInDto.getMberNo();
 
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto)session.getAttribute("loginMember");
+        if(mberInfoOutDto == null) {
+            throw new CustomException(ErrorCode.SESSION_ERROR);
+        }
         String gnrlMberNo = mberInfoOutDto.getMberNo();
 
         /**
@@ -369,7 +388,7 @@ public class WritrInfoController {
             throw new CustomException(ErrorCode.MEMBER_WRITR_NO_CONFLICT);
         }
 
-        writrInfoInDto.setChangeMberNo(StcCommVari.MNGR_MBER_NO);
+        writrInfoInDto.setChangeMberNo(gnrlMberNo);
 
         /******************************
          * 작가정보변경
@@ -385,8 +404,8 @@ public class WritrInfoController {
          * 작가 URL 등록 및 URL 번호 조회
         ******************************/
         writrUrlInDtoList.stream().forEach((dto) -> {
-            dto.setCreatMberNo(StcCommVari.MNGR_MBER_NO);
-            dto.setChangeMberNo(StcCommVari.MNGR_MBER_NO);
+            dto.setCreatMberNo(gnrlMberNo);
+            dto.setChangeMberNo(gnrlMberNo);
         });
 
         writrUrlService.creatListWritrUrl(writrUrlInDtoList);
@@ -400,8 +419,8 @@ public class WritrInfoController {
          * 작가경력 등록 및 경력번호 조회
         ******************************/
         writrCareerInDtoList.stream().forEach((dto) -> {
-            dto.setCreatMberNo(StcCommVari.MNGR_MBER_NO);
-            dto.setChangeMberNo(StcCommVari.MNGR_MBER_NO);
+            dto.setCreatMberNo(gnrlMberNo);
+            dto.setChangeMberNo(gnrlMberNo);
         });
 
         writrCareerService.createWritrCarrer(writrCareerInDtoList);
@@ -419,7 +438,7 @@ public class WritrInfoController {
              * 대표 작품 파일 확장자 및 컨텐트 유형 검증, 업로드할 위치 설정 및 위치 생성, 파일 업로드 처리
             ******************************/
             List<FileDtlsInDto> reprsntDtoList = new ArrayList<>();
-            FileDtlsInDto reprsntDto = fileDtlsService.getFileDtls(reprsntPrdctFile, mberNo, FileUploadType.ARTWORK.name(), 1);
+            FileDtlsInDto reprsntDto = fileDtlsService.getFileDtls(reprsntPrdctFile, mberNo, FileUploadType.ARTWORK.name(), 1, null, null);
             reprsntDtoList.add(reprsntDto);
             reprsntPrdctFileNo = fileDtlsService.createListFileDtls(reprsntDtoList);
         }
@@ -437,7 +456,7 @@ public class WritrInfoController {
              * 작가 프로필 파일 확장자 및 컨텐트 유형 검증, 업로드할 위치 설정 및 위치 생성, 파일 업로드 처리
              ******************************/
             List<FileDtlsInDto> writrDtoList = new ArrayList<>();
-            FileDtlsInDto writrDto = fileDtlsService.getFileDtls(writrFile, mberNo, FileUploadType.ARTIST_PROFILE.name(), 1);
+            FileDtlsInDto writrDto = fileDtlsService.getFileDtls(writrFile, mberNo, FileUploadType.ARTIST_PROFILE.name(), 1, null, null);
             writrDtoList.add(writrDto);
             writrFileNo = fileDtlsService.createListFileDtls(writrDtoList);
         }
@@ -450,7 +469,7 @@ public class WritrInfoController {
                 .mberNo(mberNo)
                 .writrFileNo(writrFileNo)
                 .reprsntPrdctFileNo(reprsntPrdctFileNo)
-                .changeMberNo(StcCommVari.MNGR_MBER_NO)
+                .changeMberNo(gnrlMberNo)
             .build());
 
         return ResponseEntity.ok(ApiResponse.success("작가 정보 변경에 성공했습니다.", null));
@@ -598,12 +617,27 @@ public class WritrInfoController {
     @Transactional
     public ResponseEntity<ApiResponse<Void>> writrJdgmnChange(@RequestBody WritrInfoBindingDto writrInfoBindingDto, HttpSession session) {
         if(writrInfoBindingDto == null ||
-           writrInfoBindingDto.getChangeJdgmnSttusCode() == null ||
-           writrInfoBindingDto.getWritrInfoInDto() == null) {
+        writrInfoBindingDto.getChangeJdgmnSttusCode() == null ||
+        writrInfoBindingDto.getWritrInfoInDto() == null) {
             throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
         
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto)session.getAttribute("loginMember");
+        if(mberInfoOutDto == null) {
+            throw new CustomException(ErrorCode.SESSION_ERROR);
+        }
+
+        String mberSbscrbTyCode = mberInfoOutDto.getMberSbscrbTyCode();
+        /**
+         * 심사 권한이 있는지 확인
+         */
+        if(ObjectUtils.nullSafeEquals(StcCommVari.MBER_SBSCRB_TY_ADMN, mberSbscrbTyCode)) {
+            throw new CustomException(ErrorCode.JDGMN_ROLE_NOT_FOUND);
+        }
+
         String loginMberNo = mberInfoOutDto.getMberNo();
 
         String changeJdgmnSttusCode = writrInfoBindingDto.getChangeJdgmnSttusCode();

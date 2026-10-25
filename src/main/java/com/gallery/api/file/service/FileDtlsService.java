@@ -56,13 +56,26 @@ public class FileDtlsService {
     }
 
     /**
+     * 파일 내역 등록
+     * @param fileNo
+     * @param FileDtlsInDtoList
+     */
+    public void createListNextFileDtls(String fileNo, List<FileDtlsInDto> FileDtlsInDtoList) {
+        fileDtlsMapper.insertListNextFileDtls(FileDtlsBindingDto
+            .builder()
+                .fileNo(fileNo)
+                .fileDtlsList(FileDtlsInDtoList)
+            .build());
+    }
+
+    /**
      * 파일 확장자 및 컨텐트 유형 검증, 업로드할 위치 설정 및 위치 생성, 파일 업로드 처리
      * @param multipartFile
      * @param mberNo
      * @param fileUpLoadPath
      * @return
      */
-    public FileDtlsInDto getFileDtls(MultipartFile multipartFile, String mberNo, String fileUpLoadPath, Integer sn) {
+    public FileDtlsInDto getFileDtls(MultipartFile multipartFile, String mberNo, String fileUpLoadPath, Integer sn, String imageTyCode, String dc) {
         /******************************
          * 파일 확장자 및 컨텐트 유형 검증
          ******************************/
@@ -80,8 +93,8 @@ public class FileDtlsService {
          * 업로드할 위치 설정 및 위치 생성
          ******************************/
         Path path = Path.of(fileUploadProperties.getRootPath()
-                          , fileUpLoadPath
-                          , today);
+                    , fileUpLoadPath
+                    , today);
 
         if(!Files.exists(path)) {
             try {
@@ -143,8 +156,8 @@ public class FileDtlsService {
                     .streFileNm(uUIDFileName.substring(0, uUIDFileName.lastIndexOf("."))) //저장 파일명
                     .fileExtsn(fileExtsn) //확장자
                     .cntntsTyCode(fileContentType) //컨텐츠유형코드
-                    .imageTyCode(null)
-                    .dc(null)
+                    .imageTyCode(imageTyCode)
+                    .dc(dc)
                     .useAt("Y")
                     .creatMberNo(StcCommVari.MNGR_MBER_NO)
                     .changeMberNo(StcCommVari.MNGR_MBER_NO)
@@ -237,7 +250,7 @@ public class FileDtlsService {
          * 업로드할 위치 설정 및 위치 생성
          ******************************/
         Path path = Path.of(fileUploadProperties.getRootPath()
-                          , sb.toString());
+                    , sb.toString());
         try {
             /******************************
              * 파일 삭제
@@ -246,6 +259,15 @@ public class FileDtlsService {
         } catch (IOException e) {
             throw new CustomException(ErrorCode.FILE_COPY_ERROR);
         }
+    }
+
+    /**
+     * 사용여부 'N' 변경
+     * @param changeMberNo
+     * @param mberNo
+     */
+    public void updateFileDtlsByMberNo(String changeMberNo, String mberNo) {
+        fileDtlsMapper.updateFileDtlsByMberNo(changeMberNo, mberNo);
     }
 }
 

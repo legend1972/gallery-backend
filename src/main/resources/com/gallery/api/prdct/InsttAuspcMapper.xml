@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.prdct.mapper.InsttAuspcMapper">
+    <insert id="insertInsttAuspc" parameterType="com.gallery.api.prdct.entity.InsttAuspcEntity">
+        <selectKey keyProperty="insttAuspcNo"
+                    resultType="string"
+                    order="BEFORE">
+            select 'IAN' || lpad(nextval('instt_auspc_no')::text, 9, '0')
+        </selectKey>
+        INSERT INTO INSTT_AUSPC
+        (
+            INSTT_AUSPC_NO,
+            SN,
+            PRDCT_ACT_NO,
+            PRDCT_SN,
+            MBER_NO,
+            INSTT_AUSPC_NM,
+            ROLE_CODE,
+            PARTCPTN_BGNDE,
+            PARTCPTN_ENDDE,
+            INSTT_AUSPC_INTRCN,
+            REPRSNT_FILE_NO,
+            ADRES,
+            TELNO,
+            HMPG,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        ) VALUES (
+            #{insttAuspcNo},
+            #{sn},
+            #{prdctActNo},
+            #{prdctSn},
+            #{mberNo},
+            #{insttAuspcNm},
+            #{roleCode},
+            #{partcptnBgnde},
+            #{partcptnEndde},
+            #{insttAuspcIntrcn},
+            #{reprsntFileNo},
+            #{adres},
+            #{telno},
+            #{hmpg},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectNextSnByMberNo" parameterType="string" resultType="com.gallery.api.prdct.entity.InsttAuspcEntity">
+        select max(sn) + 1 sn
+            , instt_auspc_no
+        from instt_auspc
+        where prdct_act_no = #{prdctActNo}
+        and prdct_sn = #{prdctSn}
+        and mber_no = #{mberNo}
+        group by instt_auspc_no
+    </select>
+
+    <insert id="insertNextInsttAuspc" parameterType="com.gallery.api.prdct.entity.InsttAuspcEntity">
+        INSERT INTO INSTT_AUSPC
+        (
+            INSTT_AUSPC_NO,
+            SN,
+            PRDCT_ACT_NO,
+            PRDCT_SN,
+            MBER_NO,
+            INSTT_AUSPC_NM,
+            ROLE_CODE,
+            PARTCPTN_BGNDE,
+            PARTCPTN_ENDDE,
+            INSTT_AUSPC_INTRCN,
+            REPRSNT_FILE_NO,
+            ADRES,
+            TELNO,
+            HMPG,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        ) VALUES (
+            #{insttAuspcNo},
+            #{sn},
+            #{prdctActNo},
+            #{prdctSn},
+            #{mberNo},
+            #{insttAuspcNm},
+            #{roleCode},
+            #{partcptnBgnde},
+            #{partcptnEndde},
+            #{insttAuspcIntrcn},
+            #{reprsntFileNo},
+            #{adres},
+            #{telno},
+            #{hmpg},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+</mapper>

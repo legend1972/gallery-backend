@@ -40,7 +40,7 @@
           , a.ntcn_setup_nm
           , a.ntcn_setup_cn
           , a.ntcn_ctgry_code
-          , a.icon_code
+          , a.icon_nm
           , c.aplctn_recptn_at
           , c.email_recptn_at
           , c.sms_recptn_at

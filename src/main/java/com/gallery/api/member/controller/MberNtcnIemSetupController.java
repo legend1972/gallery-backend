@@ -60,6 +60,9 @@ public class MberNtcnIemSetupController {
             throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
 
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto) session.getAttribute("loginMember");
         if(mberInfoOutDto == null) {
             throw new CustomException(ErrorCode.SESSION_ERROR);

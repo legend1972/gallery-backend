@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.Strings;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,6 @@ import com.gallery.api.member.service.MberInfoService;
 import com.gallery.api.member.service.MberNtcnService;
 import com.gallery.commn.ApiResponse;
 import com.gallery.commn.ErrorCode;
-import com.gallery.commn.StcCommVari;
 import com.gallery.commn.exception.CustomException;
 
 import jakarta.servlet.http.HttpSession;
@@ -51,16 +49,19 @@ public class MberNtcnController {
      */
     @GetMapping("/unread/cnt")
     public ResponseEntity<ApiResponse<Integer>> getCntMberNtcnByMberNo(HttpSession session) {
+        int cnt = 0;
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto)session.getAttribute("loginMember");
         if(mberInfoOutDto == null) {
-            throw new CustomException(ErrorCode.SESSION_ERROR);
+            ResponseEntity.ok(ApiResponse.success(cnt));
+        } else {
+            /******************************
+             * 읽지 않은 회원알림 건수 조회
+             ******************************/
+            mberNtcnService.getCntMberNtcnByMberNo(mberInfoOutDto.getMberNo(), "N");
         }
-
-        /******************************
-         * 읽지 않은 회원알림 건수 조회
-         ******************************/
-        int cnt = mberNtcnService.getCntMberNtcnByMberNo(mberInfoOutDto.getMberNo(), "N");
-
         return ResponseEntity.ok(ApiResponse.success(cnt));
     }
 
@@ -81,9 +82,16 @@ public class MberNtcnController {
     ) {
         Integer offset = (page - 1) * size;
 
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto) session.getAttribute("loginMember");
+        if(mberInfoOutDto == null) {
+            throw new CustomException(ErrorCode.SESSION_ERROR);
+        }
+        
         String gnrlMberNo = mberInfoOutDto.getMberNo(); //일반회원번호
-        String mberSbscrbTyCode = mberInfoOutDto.getMberSbscrbTyCode(); //회원가입유형코드
+        // String mberSbscrbTyCode = mberInfoOutDto.getMberSbscrbTyCode(); //회원가입유형코드
         // String mberNo = ""; //작가회원번호
         // if(ObjectUtils.nullSafeEquals(StcCommVari.MBER_SBSCRB_TY_ARTS, mberSbscrbTyCode)) {
         //     /******************************
@@ -158,6 +166,9 @@ public class MberNtcnController {
     @GetMapping("/chgredng/{mberNtcnNo}")
     @Transactional
     public ResponseEntity<ApiResponse<Void>> changeMberNtcnByMberNtcnNo(@PathVariable String mberNtcnNo, HttpSession session) {
+        /******************************
+         * 세션 정보 취득
+         ******************************/
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto) session.getAttribute("loginMember");
         if(mberInfoOutDto == null) {
             throw new CustomException(ErrorCode.SESSION_ERROR);

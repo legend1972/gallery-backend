@@ -2,15 +2,13 @@ package com.gallery.api.artist.dto.in;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+// import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+// @NoArgsConstructor
+// @AllArgsConstructor
+// @Builder
 public class WritrCareerInDto {
     private String careerNo;
     private Integer sn;

@@ -1,19 +1,16 @@
 package com.gallery.api.role.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gallery.api.artist.dto.out.WritrInfoOutDto;
-import com.gallery.api.artist.service.WritrInfoService;
 import com.gallery.api.codes.controller.CmmnCdController;
+import com.gallery.api.common.ArtistService;
 import com.gallery.api.member.dto.out.MberInfoOutDto;
 import com.gallery.api.role.dto.out.MenuOutDto;
 import com.gallery.api.role.service.MenuService;
@@ -31,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class MenuController {
     private final MenuService menuService;
 
-    private final WritrInfoService writrInfoService;
+    private final ArtistService artistService;
 
     private static Logger logger = LoggerFactory.getLogger(CmmnCdController.class);
 
@@ -46,30 +43,39 @@ public class MenuController {
          * 1. 세션 정보 취득
          * 2. 회원번호 및 가입유형코드 조회
          ******************************/
+        String roleId = "";
+        String mberNo = "";
+        String mberSbscrbTyCode = "";
         MberInfoOutDto mberInfoOutDto = (MberInfoOutDto) session.getAttribute("loginMember");
         if(mberInfoOutDto == null) {
-            throw new CustomException(ErrorCode.SESSION_ERROR);
+            roleId = StcCommVari.ROLE_ID_R0006;
+            mberSbscrbTyCode = StcCommVari.MBER_SBSCRB_TY_GUST;
+        } else {
+            mberNo = mberInfoOutDto.getMberNo();
+            mberSbscrbTyCode = mberInfoOutDto.getMberSbscrbTyCode();
         }
 
-        String mberNo = mberInfoOutDto.getMberNo();
+        /******************************
+         * 작가회원인 경우 작가회원번호 리턴, 그렇지 않으면 일반회원번호 리턴
+         ******************************/    
+        mberNo = artistService.getMberNo(mberNo, mberSbscrbTyCode);
 
-        String mberSbscrbTyCode = mberInfoOutDto.getMberSbscrbTyCode();
-        if(ObjectUtils.nullSafeEquals(StcCommVari.MBER_SBSCRB_TY_ARTS, mberSbscrbTyCode)) {
-            /******************************
-             * 회원번호로 작가 정보가 있는지 확인
-             ******************************/    
-            mberNo = Optional.ofNullable(writrInfoService.getWritrInfoByGnrlMberNo(mberInfoOutDto.getMberNo())).orElseGet(WritrInfoOutDto::new).getMberNo();
-            if(mberNo == null) {
-                throw new CustomException(ErrorCode.WRITR_NOT_FOUND);
-            }
-        }
+        // if(ObjectUtils.nullSafeEquals(StcCommVari.MBER_SBSCRB_TY_ARTS, mberSbscrbTyCode)) {
+        //     /******************************
+        //      * 회원번호로 작가 정보가 있는지 확인
+        //      ******************************/    
+        //     mberNo = Optional.ofNullable(writrInfoService.getWritrInfoByGnrlMberNo(mberNo)).orElseGet(WritrInfoOutDto::new).getMberNo();
+        //     if(mberNo == null) {
+        //         throw new CustomException(ErrorCode.WRITR_NOT_FOUND);
+        //     }
+        // }
 
         /******************************
          * 메뉴 조회
          ******************************/
         //logger.info(mberNo + ":" + mberSbscrbTyCode);
 
-        List<MenuOutDto> menuOutDtoLst = menuService.getLstMenuByMNoAndRCode(mberNo, mberSbscrbTyCode);
+        List<MenuOutDto> menuOutDtoLst = menuService.getLstMenuByMNoAndRCode(roleId, mberNo, mberSbscrbTyCode);
         if(menuOutDtoLst.size() == 0) {
             throw new CustomException(ErrorCode.MENU_ERROR);
         }

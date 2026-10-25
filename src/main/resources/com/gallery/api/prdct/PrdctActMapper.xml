@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gallery.api.prdct.mapper.PrdcActMapper">
+    <insert id="insertPrdctAct" parameterType="com.gallery.api.prdct.entity.PrdctActEntity">
+        <selectKey keyProperty="prdctActNo"
+                    resultType="string"
+                    order="BEFORE">
+            select 'PAN' || lpad(nextval('prdct_act_no')::text, 9, '0')
+        </selectKey>
+        INSERT INTO PRDCT_ACT
+        (
+            PRDCT_ACT_NO,
+            PRDCT_SN,
+            MBER_NO,
+            ACT_TY_CODE,
+            ACT_NM,
+            ACT_BGNDE,
+            ACT_ENDDE,
+            ACT_PLACE,
+            REPRSNT_PRDCT_FILE_NO,
+            ACT_INTRCN,
+            OTHBC_AT,
+            USE_AT,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        ) VALUES (
+            #{prdctActNo},
+            #{prdctSn},
+            #{mberNo},
+            #{actTyCode},
+            #{actNm},
+            #{actBgnde},
+            #{actEndde},
+            #{actPlace},
+            #{reprsntPrdctFileNo},
+            #{actIntrcn},
+            #{othbcAt},
+            #{useAt},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectNextPrdctSnByMberNo" parameterType="string" resultType="com.gallery.api.prdct.entity.PrdctActEntity">
+        select max(prdct_sn) + 1 prdct_sn
+            , prdct_act_no
+        from prdct_act
+        where mber_no = #{mberNo}
+        group by prdct_act_no
+    </select>
+
+    <insert id="insertNextPrdctAct" parameterType="com.gallery.api.prdct.entity.PrdctActEntity">
+        INSERT INTO PRDCT_ACT
+        (
+            PRDCT_ACT_NO,
+            PRDCT_SN,
+            MBER_NO,
+            ACT_TY_CODE,
+            ACT_NM,
+            ACT_BGNDE,
+            ACT_ENDDE,
+            ACT_PLACE,
+            REPRSNT_PRDCT_FILE_NO,
+            ACT_INTRCN,
+            OTHBC_AT,
+            USE_AT,
+            CREAT_MBER_NO,
+            CREAT_DT,
+            CHANGE_MBER_NO,
+            CHANGE_DT
+        ) VALUES (
+            #{prdctActNo},
+            #{prdctSn},
+            #{mberNo},
+            #{actTyCode},
+            #{actNm},
+            #{actBgnde},
+            #{actEndde},
+            #{actPlace},
+            #{reprsntPrdctFileNo},
+            #{actIntrcn},
+            #{othbcAt},
+            #{useAt},
+            #{creatMberNo},
+            CURRENT_TIMESTAMP,
+            #{changeMberNo},
+            CURRENT_TIMESTAMP
+    </insert>
+</mapper>

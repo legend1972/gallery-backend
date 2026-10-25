@@ -22,7 +22,7 @@ public class MberNtcnBindingDto {
     private String redngAt;
     private String menuUrl;
     private String ntcnCtgryCode;
-    private String iconCode;
+    private String iconNm;
     private LocalDateTime registDt;
     private String fileUrl;
     private String email;
